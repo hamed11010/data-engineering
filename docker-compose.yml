@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: iot_data
+    ports:
+      - "5432:5432"
+    networks:
+      - etl_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d iot_data"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  etl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: etl
+    depends_on:
+      - postgres
+    networks:
+      - etl_net
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: admin
+      PGPASSWORD: admin
+      PGDATABASE: iot_data
+    volumes:
+      - ./sample_logs:/app/sample_logs
+
+networks:
+  etl_net:
