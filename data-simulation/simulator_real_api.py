@@ -48,6 +48,7 @@ def parse_weather(data):
     }
 
 
+
 def write_csv(row):
     """Appends a new weather record to the CSV file."""
     file_exists = os.path.exists(OUTPUT_CSV)
