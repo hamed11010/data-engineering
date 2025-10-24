@@ -18,7 +18,7 @@ def log_alert(alert_message):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     full_log_entry = f"[{timestamp}] {alert_message}"
     
-    # 1. Print to console (as before)
+    # 1. Print to console
     print(full_log_entry)
     
     # 2. Append to file
@@ -34,7 +34,7 @@ def log_alert(alert_message):
 def on_connect(client, userdata, flags, rc):
     client.subscribe(TOPIC)
     print(f"Connected to MQTT Broker and subscribed to {TOPIC}!")
-    print(f"Alerts will be logged to: {ALERT_FILE}")  # <--- Added this line
+    print(f"Alerts will be logged to: {ALERT_FILE}") 
 
 # --- Event 2: The "On Message" Callback ---
 def on_message(client, userdata, msg):
