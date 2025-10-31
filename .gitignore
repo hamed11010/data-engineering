@@ -10,7 +10,7 @@
 # Logs / CSVs
 sample_logs/*
 !sample_logs/.gitkeep  # Optional: to keep the directory empty but tracked
-
+data-simulation/sample_logs/*
 # Byte-compiled / cache files
 __pycache__/
 *.pyc

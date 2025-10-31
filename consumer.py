@@ -3,9 +3,9 @@ import json
 import time
 
 # --- Configuration ---
-BROKER_HOST = "localhost"
+BROKER_HOST = "127.0.0.1"
 BROKER_PORT = 1883
-TOPIC = "weather/readings" # Must MATCH producer's topic
+TOPIC = "weather/readings"  # Must MATCH producer's topic
 
 # --- Event 1: The "On Connect" Callback ---
 def on_connect(client, userdata, flags, rc):
@@ -14,13 +14,11 @@ def on_connect(client, userdata, flags, rc):
 
 # --- Event 2: The "On Message" Callback ---
 def on_message(client, userdata, msg):
-    
     try:
         payload = json.loads(msg.payload.decode()) 
-        
         print(f"DEBUG: Received data: {payload}")
 
-        # --- THIS IS YOUR ALERT LOGIC ---
+        # --- ALERT LOGIC ---
         temp = payload.get("temperature_c")
         humidity = payload.get("humidity")
         city = payload.get("city", "UnknownCity") 
@@ -36,17 +34,16 @@ def on_message(client, userdata, msg):
 
 # --- Setup ---
 # 1. Create a new client
-client = mqtt.Client()
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 
 # 2. Attach functions (callbacks) to the client
 client.on_connect = on_connect
 client.on_message = on_message
 
-
-
+# --- Main Execution ---
 if __name__ == "__main__":
-    
     try:
+        print(f"Connecting to {BROKER_HOST}:{BROKER_PORT}, subscribing to '{TOPIC}' ...")
         client.connect(BROKER_HOST, BROKER_PORT, 60)
         client.loop_forever()
     except KeyboardInterrupt:

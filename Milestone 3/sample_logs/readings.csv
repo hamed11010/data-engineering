@@ -1,7 +1,0 @@
-timestamp,city,temperature,humidity,pressure,wind_speed,weather
-2025-10-21T15:10:05.016218Z,Cairo,31.42,25,1011,8.75,clear sky
-2025-10-21T15:10:12.173886Z,Cairo,31.42,25,1011,8.75,clear sky
-2025-10-21T15:10:17.864040Z,Cairo,31.42,25,1011,8.75,clear sky
-2025-10-21T19:00:00Z,Cairo,39,30,1010,10,hot sky
-2025-10-21T19:10:00Z,Cairo,38,26,1010,8,clear sky
-

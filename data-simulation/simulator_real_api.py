@@ -17,7 +17,7 @@ API_KEY = os.getenv("OPENWEATHER_API_KEY")
 CITIES = os.getenv("CITIES", "Cairo").split(",")  # now supports multiple cities
 INTERVAL = int(os.getenv("INTERVAL_SECONDS", 5))
 OUTPUT_CSV = "sample_logs/readings.csv"
-MAX_READINGS = 10  # stop automatically after 10 cycles
+MAX_READINGS = 500  
 
 if not API_KEY:
     raise SystemExit("Error: Please set your OPENWEATHER_API_KEY in the .env file.")
@@ -28,12 +28,11 @@ os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
 
 def fetch_weather(city, api_key):
     """Fetches current weather data from OpenWeatherMap API."""
-    url = "http://api.openweathermap.org/data/2.5/weather"
+    url = "https://api.openweathermap.org/data/2.5/weather" 
     params = {"q": city.strip(), "appid": api_key, "units": "metric"}
     response = requests.get(url, params=params, timeout=10)
     response.raise_for_status()
     return response.json()
-
 
 def parse_weather(data):
     """Extracts only useful fields."""
@@ -46,7 +45,6 @@ def parse_weather(data):
         "wind_speed": data["wind"]["speed"],
         "weather": data["weather"][0]["description"]
     }
-
 
 
 def write_csv(row):

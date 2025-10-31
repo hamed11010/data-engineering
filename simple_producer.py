@@ -22,7 +22,7 @@ def on_connect(client, userdata, flags, rc):
         print(f"Failed to connect, return code {rc}\n")
 
 # --- Setup MQTT Client ---
-client = mqtt.Client()
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 client.on_connect = on_connect
 client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, 60)
 client.loop_start() # Handles network in the background
