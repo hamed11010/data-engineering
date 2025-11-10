@@ -7,40 +7,34 @@ BROKER_HOST = "127.0.0.1"
 BROKER_PORT = 1883
 TOPIC = "weather/readings"  # Must MATCH producer's topic
 
-# --- Event 1: The "On Connect" Callback ---
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc, properties=None):
     client.subscribe(TOPIC)
     print(f"Connected to MQTT Broker and subscribed to {TOPIC}!")
 
-# --- Event 2: The "On Message" Callback ---
 def on_message(client, userdata, msg):
     try:
         payload = json.loads(msg.payload.decode()) 
         print(f"DEBUG: Received data: {payload}")
 
-        # --- ALERT LOGIC ---
         temp = payload.get("temperature_c")
         humidity = payload.get("humidity")
         city = payload.get("city", "UnknownCity") 
 
-        if temp is not None and float(temp) > 35.0:
-            print(f"🚨 HIGH TEMP ALERT! 🚨 City: {city}, Temperature: {temp}°C")
-
-        if humidity is not None and float(humidity) < 20.0:
-            print(f"💧 LOW HUMIDITY ALERT! 💧 City: {city}, Humidity: {humidity}%")
-            
+        if temp is not None and float(temp) < 19.0:
+            print(f"❄️ LOW TEMP ALERT! City: {city}, Temperature: {temp}°C (Bundle up, it's chilly!)")
+        if temp is not None and float(temp) > 23.0:
+            print(f"🔥 MODERATE HIGH TEMP ALERT! City: {city}, Temperature: {temp}°C (Feels warm!)")
+        if humidity is not None and float(humidity) < 45.0:
+            print(f"💧 LOW HUMIDITY ALERT! City: {city}, Humidity: {humidity}% (Stay hydrated!)")
+        if humidity is not None and float(humidity) > 80.0:
+            print(f"🌫️ HIGH HUMIDITY ALERT! City: {city}, Humidity: {humidity}% (It feels muggy!)")
     except Exception as e:
         print(f"Error processing message: {e}")
 
-# --- Setup ---
-# 1. Create a new client
 client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-
-# 2. Attach functions (callbacks) to the client
 client.on_connect = on_connect
 client.on_message = on_message
 
-# --- Main Execution ---
 if __name__ == "__main__":
     try:
         print(f"Connecting to {BROKER_HOST}:{BROKER_PORT}, subscribing to '{TOPIC}' ...")
