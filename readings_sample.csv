@@ -1,4 +1,4 @@
- timestamp,city,temperature_c,humidity,pressure,wind_speed,weather
+timestamp,city,temperature_c,humidity,pressure,wind_speed,weather
 2025-10-14T20:10:05.303101Z,Cairo,23.42,60,1017,5.66,scattered clouds
 2025-10-14T20:10:10.470570Z,Cairo,23.42,60,1017,5.66,scattered clouds
 2025-10-14T20:10:15.600335Z,Cairo,23.42,60,1017,5.66,scattered clouds
