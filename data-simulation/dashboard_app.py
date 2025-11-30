@@ -20,7 +20,8 @@ from prediction_utils import predict_tomorrow_for_city
 # Load environment variables from .env at project root (if needed later)
 load_dotenv()
 
-CSV_FILE = "sample_logs/readings.csv"
+CSV_FILE = "readings_sample.csv"
+
 
 st.set_page_config(page_title="Real-Time Weather Dashboard", layout="centered")
 st.title("🌦️ Real-Time Weather Dashboard – Multi-City")
