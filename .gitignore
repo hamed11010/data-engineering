@@ -15,6 +15,9 @@ sample_logs/*
 data-simulation/sample_logs/*
 subscribers.csv
 
+# Screenshots
+screenshots/*.png
+
 # Byte-compiled / cache files
 __pycache__/
 *.pyc
