@@ -16,19 +16,17 @@ sys.path.append(ROOT_DIR)
 from mailer import send_email
 from prediction_utils import predict_tomorrow_for_city
 
-
 # Load environment variables from .env at project root (if needed later)
 load_dotenv()
 
-CSV_FILE = "readings_sample.csv"
-
+CSV_FILE = os.path.join(ROOT_DIR, "sample_logs", "readings.csv")
 
 st.set_page_config(page_title="Real-Time Weather Dashboard", layout="centered")
 st.title("🌦️ Real-Time Weather Dashboard – Multi-City")
 st.caption("Displays live temperature & humidity from OpenWeatherMap API")
 
 # ---- Email subscription (stored locally in subscribers.csv) ----
-email_file = "subscribers.csv"
+email_file = os.path.join(ROOT_DIR, "subscribers.csv")
 
 st.sidebar.subheader("Email Alerts")
 email = st.sidebar.text_input("Enter Email for Daily & Severe Weather Alerts")
@@ -72,7 +70,7 @@ if subscribe and email:
                     message_lines = [
                         "Hello 👋",
                         "",
-                        f"Thanks for subscribing to weather updates.",
+                        "Thanks for subscribing to weather updates.",
                         f"Current conditions in {city_name}:",
                         f"- Temperature: {temp:.1f}°C",
                         f"- Humidity: {hum:.0f}%",
@@ -122,6 +120,15 @@ available_cities = sorted(full_df["city"].unique())
 # ---- City Selector (Single City) ----
 selected_city = st.selectbox("Select City", available_cities)
 st.session_state["selected_city"] = selected_city
+
+# ---- Multi-City Comparison Section (Widget created ONCE) ----
+st.header("Compare Cities Side by Side")
+city_options = st.multiselect(
+    "Select up to 2 cities for comparison",
+    available_cities,
+    default=available_cities[:2],
+    key="city_compare_multiselect_v2",
+)
 
 # ---- Real-Time Dashboard Loop ----
 placeholder = st.empty()
@@ -173,8 +180,8 @@ while True:
     st.write("#### Historical Averages (last 50 readings)")
     st.write(f"**Average Temperature:** {avg_temp:.2f}°C")
     st.write(f"**Average Humidity:** {avg_hum:.2f}%")
-    
-        # ---- Simple AI Prediction for Tomorrow ----
+
+    # ---- Simple AI Prediction for Tomorrow ----
     try:
         pred_temp, pred_hum = predict_tomorrow_for_city(df, selected_city)
         if pred_temp is not None and pred_hum is not None:
@@ -188,16 +195,7 @@ while True:
         st.write("#### Predicted for tomorrow (simple trend)")
         st.write(f"Could not compute prediction: {e}")
 
-
-    # ---- Multi-City Comparison Section ----
-    st.header("Compare Cities Side by Side")
-    city_options = st.multiselect(
-        "Select up to 2 cities for comparison",
-        available_cities,
-        default=available_cities[:2],
-        key="city_compare_multiselect", 
-    )
-    
+    # ---- Multi-City Comparison Logic (uses existing widget value) ----
     if len(city_options) == 2:
         comp_df = df[df["city"].isin(city_options)].copy()
         comp_df["temperature_c"] = comp_df["temperature_c"].astype(float)
